@@ -1,12 +1,14 @@
 package com.desafio_hit_todo_list.hit_todolist.task.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.desafio_hit_todo_list.hit_todolist.exceptions.RecordNotFoundException;
+import com.desafio_hit_todo_list.hit_todolist.task.dto.TaskDTO;
+import com.desafio_hit_todo_list.hit_todolist.task.dto.mapper.TaskMapper;
 import com.desafio_hit_todo_list.hit_todolist.task.entity.Task;
 import com.desafio_hit_todo_list.hit_todolist.task.entity.TaskStatus;
 import com.desafio_hit_todo_list.hit_todolist.task.repository.TaskRepository;
@@ -17,30 +19,36 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private TaskMapper mapper;
+
     @Transactional(readOnly = true)
-    public List<Task> findAllTasks(){
-        List<Task> tasks = repository.findAll();
+    public Page<Task> findAllTasks(Pageable pageable){
+        Page<Task> tasks = repository.findAll(pageable);
         return tasks;
     }
 
     @Transactional(readOnly = true)
-    public Task findTaskById(Long id){
-        return repository.findById(id).orElseThrow(() -> new RecordNotFoundException("Task not found with id: " + id));
+    public TaskDTO findTaskById(Long id){
+        Task task = repository.findById(id)
+        .orElseThrow(() -> new RecordNotFoundException("Task not found with id: " + id));
+        return mapper.toDTO(task);
     }
 
     @Transactional
-    public Task insertTask(Task task){
+    public Task insertTask(TaskDTO taskDTO){
+        Task task = mapper.toEntity(taskDTO);
         return repository.save(task);
     }
 
     @Transactional
-    public Task updateTask(Long id, Task taskRequest) {
+    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
         Task taskToBeUpdated = repository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Task not found with id: " + id));
         
-        updateTaskFields(taskToBeUpdated, taskRequest);
-
-        return repository.save(taskToBeUpdated);
+        updateTaskFields(taskToBeUpdated, taskDTO);
+        repository.save(taskToBeUpdated);
+        return mapper.toDTO(taskToBeUpdated);
     }
 
     @Transactional
@@ -57,11 +65,11 @@ public class TaskService {
         repository.delete(taskToBeDeleted);
     }
 
-    private void updateTaskFields(Task taskToUpdate, Task taskRequest) {
-        taskToUpdate.setTitle(taskRequest.getTitle());
-        taskToUpdate.setDescription(taskRequest.getDescription());
-        taskToUpdate.setStatus(taskRequest.getStatus());
-        taskToUpdate.setPriority(taskRequest.getPriority());
+    private void updateTaskFields(Task taskToUpdate, TaskDTO taskRequest) {
+        taskToUpdate.setTitle(taskRequest.title());
+        taskToUpdate.setDescription(taskRequest.description());
+        taskToUpdate.setStatus(taskRequest.status());
+        taskToUpdate.setPriority(taskRequest.priority());
     }
 
 
