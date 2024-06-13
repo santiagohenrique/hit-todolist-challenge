@@ -1,16 +1,19 @@
 package com.desafio_hit_todo_list.hit_todolist.task.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.desafio_hit_todo_list.hit_todolist.exceptions.RecordNotFoundException;
 import com.desafio_hit_todo_list.hit_todolist.task.dto.TaskDTO;
+import com.desafio_hit_todo_list.hit_todolist.task.dto.TaskPageDTO;
 import com.desafio_hit_todo_list.hit_todolist.task.dto.mapper.TaskMapper;
 import com.desafio_hit_todo_list.hit_todolist.task.entity.Task;
-import com.desafio_hit_todo_list.hit_todolist.task.entity.TaskStatus;
+import com.desafio_hit_todo_list.hit_todolist.task.enums.TaskStatus;
 import com.desafio_hit_todo_list.hit_todolist.task.repository.TaskRepository;
 
 @Service
@@ -23,9 +26,11 @@ public class TaskService {
     private TaskMapper mapper;
 
     @Transactional(readOnly = true)
-    public Page<Task> findAllTasks(Pageable pageable){
-        Page<Task> tasks = repository.findAll(pageable);
-        return tasks;
+    public TaskPageDTO findAllTasks(int page, int size){
+        Page<Task> tasksPage = repository.findAll(PageRequest.of(page, size));
+        // List<Task> tasks = tasksPage.get().map(mapper::toDTO).collect(Collectors.toList());
+        List<Task> tasks = tasksPage.toList();
+        return new TaskPageDTO(tasks, tasksPage.getTotalElements(), tasksPage.getTotalPages());
     }
 
     @Transactional(readOnly = true)
