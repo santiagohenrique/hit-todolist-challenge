@@ -56,7 +56,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}/{status}")
-    public Task updateTaskStatus(@PathVariable @NotNull @Positive Long id, @PathVariable TaskStatus status) {
+    public TaskDTO updateTaskStatus(@PathVariable @NotNull @Positive Long id, @PathVariable @Valid TaskStatus status) {
         return service.updateTaskStatus(id, status);
     }
 

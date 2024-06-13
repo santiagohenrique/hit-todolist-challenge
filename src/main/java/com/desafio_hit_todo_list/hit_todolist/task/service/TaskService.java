@@ -57,11 +57,12 @@ public class TaskService {
     }
 
     @Transactional
-    public Task updateTaskStatus(Long id, TaskStatus status) {
+    public TaskDTO updateTaskStatus(Long id, TaskStatus status) {
         Task taskToBeUpdated = repository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Task not found with id: " + id));
         taskToBeUpdated.setStatus(status);
-        return repository.save(taskToBeUpdated);
+        repository.save(taskToBeUpdated);
+        return mapper.toDTO(taskToBeUpdated);
     }
 
     @Transactional

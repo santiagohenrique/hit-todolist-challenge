@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.desafio_hit_todo_list.hit_todolist.task.entity.Task;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+
     
 }

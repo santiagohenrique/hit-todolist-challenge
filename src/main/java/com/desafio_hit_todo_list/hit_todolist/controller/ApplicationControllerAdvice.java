@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.desafio_hit_todo_list.hit_todolist.exceptions.ApplicationExceptionMessage;
 import com.desafio_hit_todo_list.hit_todolist.exceptions.RecordNotFoundException;
@@ -62,6 +63,20 @@ public class ApplicationControllerAdvice {
                 errorDetails = String.format("Invalid enum value: '%s' for the field: '%s'. The value must be one of: %s.",
                         ifx.getValue(), ifx.getPath().get(ifx.getPath().size()-1).getFieldName(), Arrays.toString(ifx.getTargetType().getEnumConstants()));
             }
+        }
+        ApplicationExceptionMessage errorMessage = new ApplicationExceptionMessage(HttpStatus.BAD_REQUEST, errorDetails);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApplicationExceptionMessage> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String errorDetails = String.format("Failed to convert value of type '%s' to required type '%s' for parameter '%s'.",
+                e.getValue().getClass().getSimpleName(), e.getRequiredType().getSimpleName(), e.getName());
+        if (e.getRequiredType().isEnum()) {
+            String enumValues = Arrays.stream(e.getRequiredType().getEnumConstants())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+            errorDetails += String.format(" Possible values are: %s.", enumValues);
         }
         ApplicationExceptionMessage errorMessage = new ApplicationExceptionMessage(HttpStatus.BAD_REQUEST, errorDetails);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
