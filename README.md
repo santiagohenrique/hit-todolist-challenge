@@ -6,9 +6,9 @@
 ## Tecnologias Utilizadas
 - Spring Boot: Framework para criação de aplicativos Java baseados em padrões.
 - Spring Data JPA: Facilita a implementação de repositórios baseados em JPA.
-- Hibernate Validator: Para validação de dados.
-- H2 Database: Banco de dados em memória para desenvolvimento.
-- MySQL: Banco de dados relacional para persistência de dados em produção.
+- Jakarta Validation: Para validação de dados.
+- H2 Database: Banco de dados em memória para testes.
+- MySQL: Banco de dados relacional para persistência de dados.
 - Docker Compose: Para configurar o ambiente de desenvolvimento com MySQL.
 - Lombok: Biblioteca Java que auxilia na redução de código boilerplate.
 - Jakarta Persistence (JPA): Especificação para persistência de dados em Java.
