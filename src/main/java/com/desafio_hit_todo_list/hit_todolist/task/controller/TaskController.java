@@ -1,5 +1,8 @@
 package com.desafio_hit_todo_list.hit_todolist.task.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +68,14 @@ public class TaskController {
         service.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/metrics")
+    public ResponseEntity<Map<String, Object>> getTaskMetrics() {
+        Map<String, Object> metrics = new HashMap<>();
+        metrics.put("totalTasks", service.countTotalTasks());
+        metrics.put("completedTasks", service.countCompletedTasks());
+    return ResponseEntity.ok().body(metrics);
+}
 
     
 }

@@ -1,5 +1,6 @@
 package com.desafio_hit_todo_list.hit_todolist.task.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,30 @@ public class TaskService {
         taskToUpdate.setPriority(taskRequest.priority());
     }
 
+    public long countTotalTasks() {
+        return repository.count();
+    }
+
+    public long countCompletedTasks() {
+        return repository.countByStatus(TaskStatus.COMPLETED);
+    }
+
+    public long countPendingTasks() {
+        return repository.countByStatus(TaskStatus.PENDING);
+    }
+
+    public long countInProgressTasks() {
+        return repository.countByStatus(TaskStatus.IN_PROGRESS);
+    }
+
+    public long countHighPriorityTasks() {
+        return repository.countByPriority(3L);
+    }
+
+    public long countTasksCreatedLastMonth() {
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        return repository.countByCreatedAtAfter(oneMonthAgo);
+    }
 
     
 }
