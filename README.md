@@ -46,7 +46,8 @@
 ## Como executar o programa
 - Certifique-se de ter o Java JDK 17 ou superior instalado.
 - Você precisará de um ambiente de desenvolvimento configurado com o Maven e um IDE de sua preferência (como IntelliJ IDEA, Eclipse, etc.).
-- O Docker e Docker Compose são necessários para executar o banco de dados MySQL e o serviço Redis.
+- O Docker e Docker Compose são necessários para executar o banco de dados MySQL.
+- Clone o repositório  na sua máquina
 - No diretório raiz do projeto, execute o Docker Compose para configurar o MySQL: `docker-compose up`
 - Caso preferir, instale as dependências com Maven para executar a aplicação: `mvn clean install` e...
 - Execute a aplicação: `mvn spring-boot:run`
