@@ -1,7 +1,7 @@
 # Desafio HIT Communications TODO List - API de Gerenciamento de Tarefas
 
 ## Descrição
-- Este projeto consiste em uma API RESTful para gerenciamento de tarefas (TODO list), desenvolvida com Spring Boot, utilizando Spring Data JPA para acesso ao banco de dados com validação de dados. A API permite operações CRUD básicas para tarefas, incluindo criação, leitura, atualização e remoção de tarefas. Além disso, há suporte para atualização de status das tarefas e paginação na listagem.
+- Este projeto consiste em uma API RESTful para gerenciamento de tarefas (TODO list), desenvolvida com Spring Boot, utilizando Spring Data JPA para acesso ao banco de dados com validação de dados. A API permite operações CRUD básicas para tarefas, incluindo criação, leitura, atualização e remoção de tarefas. Além disso, há suporte para atualização de status das tarefas e paginação na listagem. A API também utiliza o Spring Boot Actuator para monitoramento de métricas customizadas.
 
 ## Tecnologias Utilizadas
 - Spring Boot: Framework para criação de aplicativos Java baseados em padrões.
@@ -14,6 +14,7 @@
 - Jakarta Persistence (JPA): Especificação para persistência de dados em Java.
 - JUnit 5: Framework de teste para Java.
 - Maven: Gerenciador de dependências.
+- Spring Boot Actuator: Para monitoramento e métricas da aplicação.
 
 ## Funcionalidades:
 ### Listagem de Tarefas
@@ -41,6 +42,19 @@
 ### Deletar Tarefa
 #### Endpoint: DELETE /tasks/{id}
 - Descrição: Deleta uma tarefa existente com base no ID fornecido.
+
+## Monitoramento de tarefas
+### Endpoint Customizado: GET /actuator/taskMetrics
+#### Descrição: Retorna métricas customizadas sobre as tarefas, incluindo:
+- Total de tarefas
+- Tarefas concluídas
+- Tarefas pendentes
+- Tarefas em andamento
+- Tarefas de alta prioridade
+- Tarefas criadas no último mês
+- Tempo médio para concluir uma tarefa
+
+Para acessar, inicie a aplicação e use a url: "http://localhost:8081/actuator/taskMetrics".
 
 ## Testes implementados
 - A API possui uma cobertura de testes que inclui:
