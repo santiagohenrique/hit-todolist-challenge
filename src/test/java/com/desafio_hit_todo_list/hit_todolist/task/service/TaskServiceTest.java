@@ -166,7 +166,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Should update and return a TaskDTO when id exists.")
+    @DisplayName("Should update and return a TaskStatus of an Task when id exists.")
     void updateTaskStatusCase1(){
         TaskDTO taskToBeUpdatedDTO = new TaskDTO("Updated Task", "Updated description", TaskStatus.COMPLETED, 1L);
         Task updatedTask = createTask(1L, "Updated Task", "Updated description", TaskStatus.COMPLETED, 1L);
@@ -184,6 +184,15 @@ public class TaskServiceTest {
         Mockito.verify(taskRepository, times(1)).findById(existingId);
         Mockito.verify(taskRepository, times(1)).save(Mockito.any(Task.class));
         Mockito.verify(mapper, times(1)).toDTO(Mockito.any(Task.class));
+    }
+
+    @Test
+    @DisplayName("Should update and return a TaskStatus of an Task when id exists.")
+    void updateTaskStatusCase2(){
+        Assertions.assertThatThrownBy(() -> {
+            taskService.updateTaskStatus(nonExistingId, null);
+        }).isInstanceOf(RecordNotFoundException.class)
+            .hasMessageContaining("Task not found with id: " + nonExistingId);
     }
 
 
