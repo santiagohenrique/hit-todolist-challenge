@@ -43,7 +43,7 @@ public class TaskControllerTest {
     
     @BeforeEach
     void setup(){
-        
+
         existingId = 1L;
         nonExistingId = 999L;
         
@@ -198,8 +198,7 @@ public class TaskControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
-    @Test
-    private Task createTask(Long id, String title, String description, TaskStatus status, Long priority) {
+    public Task createTask(Long id, String title, String description, TaskStatus status, Long priority) {
         return Task.builder()
                 .id(id)
                 .title(title)
