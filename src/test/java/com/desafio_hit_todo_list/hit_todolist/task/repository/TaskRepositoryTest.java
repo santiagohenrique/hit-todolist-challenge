@@ -26,7 +26,7 @@ public class TaskRepositoryTest {
     private EntityManager entityManager;
 
     @Test
-    @DisplayName("Should return a task successfully from database.")
+    @DisplayName("Should return a task successfully from database when id exists.")
     void findTaskByIdCase1(){
         Long existingId = 1L;
         TaskDTO data = new TaskDTO("Tarefa nova", "tarefa nova descrição", TaskStatus.PENDING, 3L);
@@ -38,7 +38,7 @@ public class TaskRepositoryTest {
     @Test
     @DisplayName("Should not return a task when it does not exist in the database.")
     void findTaskByIdCase2(){
-        Long nonExistingId = 1L;
+        Long nonExistingId = 99L;
         Optional<Task> result = taskRepository.findById(nonExistingId);
         Assertions.assertThat(result.isEmpty()).isTrue();
     }
