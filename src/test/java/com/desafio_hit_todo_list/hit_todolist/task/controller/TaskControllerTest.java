@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.desafio_hit_todo_list.hit_todolist.exceptions.RecordNotFoundException;
 import com.desafio_hit_todo_list.hit_todolist.task.dto.TaskDTO;
 import com.desafio_hit_todo_list.hit_todolist.task.dto.TaskPageDTO;
 import com.desafio_hit_todo_list.hit_todolist.task.entity.Task;
@@ -44,6 +45,7 @@ public class TaskControllerTest {
     void setup(){
         
         existingId = 1L;
+        nonExistingId = 999L;
         
         List<Task> tasks = Arrays.asList(
                 createTask(1L, "Task 1", "Description 1", TaskStatus.PENDING, 1L),
@@ -54,16 +56,24 @@ public class TaskControllerTest {
         
         TaskPageDTO pageDTO = new TaskPageDTO(tasks, 3, 1);
         Mockito.when(taskService.findAllTasks(0, 10)).thenReturn(pageDTO);
+
+        TaskPageDTO emptyPageDTO = new TaskPageDTO(Arrays.asList(), 5, 1);
+        Mockito.when(taskService.findAllTasks(100, 10)).thenReturn(emptyPageDTO);
         
         taskDTO = new TaskDTO("Task title", "Task description", TaskStatus.COMPLETED, 3L);
         Mockito.when(taskService.findTaskById(existingId)).thenReturn(taskDTO);
+        Mockito.when(taskService.findTaskById(nonExistingId)).thenThrow(RecordNotFoundException.class);
 
         newTask = createTask(4L, "New task title", "New task description", TaskStatus.PENDING, 2L);
         Mockito.when(taskService.insertTask(ArgumentMatchers.any())).thenReturn(newTask);
 
         Mockito.when(taskService.updateTask(existingId, taskDTO)).thenReturn(taskDTO);
+        Mockito.when(taskService.updateTask(nonExistingId, taskDTO)).thenThrow(RecordNotFoundException.class);
 
         Mockito.doNothing().when(taskService).deleteTask(existingId);
+        Mockito.doThrow(RecordNotFoundException.class).when(taskService).deleteTask(nonExistingId);
+
+
         Mockito.when(taskService.updateTaskStatus(existingId, TaskStatus.COMPLETED)).thenReturn(taskDTO);
 
 
@@ -87,6 +97,17 @@ public class TaskControllerTest {
     }
 
     @Test
+    @DisplayName("Should return empty when page does not exist.")
+    void findAllTasksCase2() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks?page=100&size=10")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.tasks").isEmpty())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(5))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages").value(1));
+    }
+
+    @Test
     @DisplayName("Should return a task when id exists.")
     void findTaskByIdCase1() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/tasks/{id}", existingId)
@@ -97,6 +118,14 @@ public class TaskControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("COMPLETED"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.priority").value("3"));
             
+    }
+
+    @Test
+    @DisplayName("Should not return a task when id does not exist and throw a RecordNotFoundException message.")
+    void findTaskByIdCase2() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/{id}", nonExistingId)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -134,6 +163,19 @@ public class TaskControllerTest {
     }
 
     @Test
+    @DisplayName("Should not return a TaskDTO when id does not exist and should throw an RecordNotFoundException message.")
+    void updateTaskCase2() throws Exception {
+
+        String jsonBody = objectMapper.writeValueAsString(taskDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/tasks/{id}", nonExistingId)
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Should update task status.")
     void updateTaskStatusCase1() throws Exception  {
         mockMvc.perform(MockMvcRequestBuilders.patch("/tasks/{id}/{status}", existingId, TaskStatus.COMPLETED)
@@ -148,6 +190,12 @@ public class TaskControllerTest {
     void deleteTaskCase1() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/{id}", existingId))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+    @Test
+    @DisplayName("Should not delete a task when it does not exist and throw a RecordNotFoundException message.")
+    void deleteTaskCase2() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/{id}", nonExistingId))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
