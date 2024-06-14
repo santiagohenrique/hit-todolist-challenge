@@ -42,6 +42,12 @@
 #### Endpoint: DELETE /tasks/{id}
 - Descrição: Deleta uma tarefa existente com base no ID fornecido.
 
+## Testes implementados
+- A API possui uma cobertura de testes que inclui:
+- Testes unitários: TaskServiceTask, TaskTest, TaskRepositoryTest e TaskController
+- Testes integrado: TaskServiceIT
+
+- Importante ressaltar que os testes da classe TaskController só estão funcionando normalmente quando o CommandLineRunner da classe principal (HitTodolistApplication) está comentado. 
 
 ## Como executar o programa
 - Certifique-se de ter o Java JDK 17 ou superior instalado.
