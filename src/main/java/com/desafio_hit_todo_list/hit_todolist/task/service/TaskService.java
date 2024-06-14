@@ -96,7 +96,7 @@ public class TaskService {
     }
 
     public long countHighPriorityTasks() {
-        return repository.countByPriority(3L);
+        return repository.countByPriority(4L);
     }
 
     public long countTasksCreatedLastMonth() {
