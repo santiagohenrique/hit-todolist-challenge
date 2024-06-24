@@ -1,9 +1,9 @@
 # Desafio HIT Communications TODO List - API de Gerenciamento de Tarefas
 
-## Descrição
+## 1. Descrição
 - Este projeto consiste em uma API RESTful para gerenciamento de tarefas (TODO list), desenvolvida com Spring Boot, utilizando Spring Data JPA para acesso ao banco de dados com validação de dados. A API permite operações CRUD básicas para tarefas, incluindo criação, leitura, atualização e remoção de tarefas. Além disso, há suporte para atualização de status das tarefas e paginação na listagem. A API também utiliza o Spring Boot Actuator para monitoramento de métricas customizadas.
 
-## Tecnologias Utilizadas
+## 2. Tecnologias Utilizadas
 - Spring Boot: Framework para criação de aplicativos Java baseados em padrões.
 - Spring Data JPA: Facilita a implementação de repositórios baseados em JPA.
 - Jakarta Validation: Para validação de dados.
@@ -16,7 +16,7 @@
 - Maven: Gerenciador de dependências.
 - Spring Boot Actuator: Para monitoramento e métricas da aplicação.
 
-## Funcionalidades:
+## 3. Funcionalidades:
 ### Listagem de Tarefas
 
 #### Endpoint: GET /tasks?page=0&size=10
@@ -43,7 +43,7 @@
 #### Endpoint: DELETE /tasks/{id}
 - Descrição: Deleta uma tarefa existente com base no ID fornecido.
 
-## Monitoramento de tarefas
+## 4. Monitoramento de tarefas
 ### Endpoint Customizado: GET /actuator/taskMetrics
 #### Descrição: Retorna métricas customizadas sobre as tarefas, incluindo:
 - Total de tarefas
@@ -56,18 +56,34 @@
 
 Para acessar, inicie a aplicação e use a url: "http://localhost:8081/actuator/taskMetrics".
 
-## Testes implementados
+## 5. Testes implementados
 - A API possui uma cobertura de testes que inclui:
 - Testes unitários: TaskServiceTask, TaskTest, TaskRepositoryTest e TaskController
 - Testes integrado: TaskServiceIT
 
 - Importante ressaltar que os testes da classe TaskController só estão funcionando normalmente quando o CommandLineRunner da classe principal (HitTodolistApplication) está comentado. 
 
-## Como executar o programa
+## 6. Como executar o programa
+- Clone ou baixe o repositório  na sua máquina
+
+### Docker
+- Caso deseje executar o programa com o Docker, vá para o diretório raiz
+- No diretório raiz do projeto, execute o Docker Compose para configurar o MySQL e o container da aplicação: `docker-compose up`
+- Tome um café ☕ e aguarde alguns instantes enquanto a aplicação se inicia.
+
+### Execução por build
 - Certifique-se de ter o Java JDK 17 ou superior instalado.
 - Você precisará de um ambiente de desenvolvimento configurado com o Maven e um IDE de sua preferência (como IntelliJ IDEA, Eclipse, etc.).
 - O Docker e Docker Compose são necessários para executar o banco de dados MySQL.
-- Clone o repositório  na sua máquina
-- No diretório raiz do projeto, execute o Docker Compose para configurar o MySQL: `docker-compose up`
-- Caso preferir, instale as dependências com Maven para executar a aplicação: `mvn clean install` e...
-- Execute a aplicação: `mvn spring-boot:run`
+- Execute o comando para instanciar o container do MySQL `docker compose up -d mysql`
+- Execute a build do programa sem os testes `mvn clean install -DskipTests`
+- Execute a aplicação: `java -jar target/hit-todolist-0.0.1-SNAPSHOT.jar`
+
+## 7. Documentação Swagger
+- Para um melhor entendimento do projeto, a aplicação possui um documento Swagger que vai ajudá-lo a entender melhor sobre as estruturas dos controles e payloads. 
+<div align="center">
+    <img src="hit_todo_swagger.png" alt="Imagem do doc swagger da API" width="500px" />
+</div>
+- Certifique-se de que a aplicação já está rodando antes e vá para o link: "http://localhost:8080/swagger-ui/index.html#/"
+<br />
+- Feito! Agora você pode usufruir das controladoras usadas na aplicação.
