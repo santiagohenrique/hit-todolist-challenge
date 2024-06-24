@@ -1,10 +1,48 @@
+version: '3.8'
+
 services:
   mysql:
     image: 'mysql:latest'
     environment:
       - 'MYSQL_DATABASE=hit-todo-database'
+      - 'MYSQL_USER=myuser'
       - 'MYSQL_PASSWORD=secret'
       - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
     ports:
-      - '3308:3306'
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - springboot-mysql-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      retries: 10
+      interval: 3s
+      timeout: 30s
+
+  hit_challenge:
+    build: .
+    image: "hit_challenge:latest"
+    container_name: hit_challenge_container
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hit-todo-database
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SERVER_PORT=8080
+      - MANAGEMENT_SERVER_PORT=8081
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+    networks:
+      - springboot-mysql-network
+    entrypoint: ["sh", "-c", "echo 'Waiting for MySQL to be ready...' && sleep 30 && java -jar app.jar"]
+
+volumes:
+  mysql-data:
+networks:
+  springboot-mysql-network:
+    name: springboot-mysql-network

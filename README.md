@@ -19,7 +19,7 @@
 ## Funcionalidades:
 ### Listagem de Tarefas
 
-#### Endpoint: GET /tasks
+#### Endpoint: GET /tasks?page=0&size=10
 - Descrição: Retorna uma lista paginada de todas as tarefas cadastradas.
 
 ### Buscar Tarefa por ID
