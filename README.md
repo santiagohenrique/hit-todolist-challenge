@@ -54,7 +54,7 @@
 - Tarefas criadas no último mês
 - Tempo médio para concluir uma tarefa
 
-Para acessar, inicie a aplicação e use a url: "http://localhost:8081/actuator/taskMetrics".
+Para acessar, inicie a aplicação e use a url: "<a> http://localhost:8081/actuator/taskMetrics </a>".
 
 ## 5. Testes implementados
 - A API possui uma cobertura de testes que inclui:
@@ -84,6 +84,6 @@ Para acessar, inicie a aplicação e use a url: "http://localhost:8081/actuator/
 <div align="center">
     <img src="hit_todo_swagger.png" alt="Imagem do doc swagger da API" width="500px" />
 </div>
-- Certifique-se de que a aplicação já está rodando antes e vá para o link: "http://localhost:8080/swagger-ui/index.html#/"
+- Certifique-se de que a aplicação já está rodando antes e vá para o link: <a> http://localhost:8080/swagger-ui/index.html#/ </a>
 <br />
 - Feito! Agora você pode usufruir das controladoras usadas na aplicação.
