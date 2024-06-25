@@ -13,6 +13,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.model.EventDateTime;
 
 import java.io.FileInputStream;
@@ -30,6 +31,7 @@ public class GoogleCalendarService {
 
     private static final String APPLICATION_NAME = "hit-todoapp";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credentials.json";
 
@@ -40,6 +42,7 @@ public class GoogleCalendarService {
             GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
             GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
                 .setAccessType("offline")
                 .build();
 
@@ -69,13 +72,13 @@ public class GoogleCalendarService {
         DateTime startDateTime = new DateTime(task.getCreatedAt().toString());
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Sao_Paulo");
         event.setStart(start);
 
         DateTime endDateTime = new DateTime(task.getUpdatedAt().toString());
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Sao_Paulo");
         event.setEnd(end);
 
         String calendarId = "primary";
