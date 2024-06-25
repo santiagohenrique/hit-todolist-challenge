@@ -1,5 +1,7 @@
 package com.desafio_hit_todo_list.hit_todolist.task.service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class TaskService {
     @Autowired
     private TaskMapper mapper;
 
+    @Autowired
+    private GoogleCalendarService googleCalendarService;
+
     @Transactional(readOnly = true)
     public TaskPageDTO findAllTasks(int page, int size){
         Page<Task> tasksPage = repository.findAll(PageRequest.of(page, size));
@@ -44,7 +49,13 @@ public class TaskService {
     @Transactional
     public Task insertTask(TaskDTO taskDTO){
         Task task = mapper.toEntity(taskDTO);
-        return repository.save(task);
+        Task savedTask = repository.save(task);
+        try {
+            googleCalendarService.addTaskToCalendar(savedTask);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+        return savedTask;
     }
 
     @Transactional
