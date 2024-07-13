@@ -87,3 +87,8 @@ Para acessar, inicie a aplicação e use a url: "<a> http://localhost:8081/actua
 - Certifique-se de que a aplicação já está rodando antes e vá para o link: <a> "http://localhost:8080/swagger-ui/index.html#/" </a>
 <br />
 - Feito! Agora você pode usufruir das controladoras usadas na aplicação.
+
+## 8. Coleção do Postman
+
+- Na raiz do projeto, há um coleção do Postman com o nome de `HIT-todo_challenge.postman_collection.json` que pode ser utilizada para facilitar na requisição dos endpoints.
+
