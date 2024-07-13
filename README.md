@@ -66,9 +66,9 @@ Para acessar, inicie a aplicação e use a url: "<a> http://localhost:8081/actua
 ## 6. Como executar o programa
 - Clone ou baixe o repositório  na sua máquina
 
-### Docker
+### Docker (recomendado)
 - Caso deseje executar o programa com o Docker, vá para o diretório raiz
-- No diretório raiz do projeto, execute o Docker Compose para configurar o MySQL e o container da aplicação: `docker-compose up`
+- No diretório raiz do projeto, execute o Docker Compose para configurar o MySQL e o container da aplicação: `docker compose up`
 - Tome um café ☕ e aguarde alguns instantes enquanto a aplicação se inicia.
 
 ### Execução por build
